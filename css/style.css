@@ -1,0 +1,1169 @@
+/* ============================================
+   STYLE.CSS - Tema Scrapbook / Polaroid Vintage
+   Struktur class sama dengan versi sebelumnya,
+   jadi semua JS tetap jalan tanpa diubah.
+   ============================================ */
+
+:root {
+    --desk: #CDB894;          /* papan kraft */
+    --paper: #F7F1E3;         /* kertas catatan */
+    --polaroid: #FDFBF6;      /* bingkai polaroid */
+    --ink: #3A2E28;           /* tinta sepia */
+    --ink-soft: #6B5A4E;
+    --rose: #C9787A;          /* washi merah muda pudar */
+    --sage: #6F8A5E;          /* hijau daun kering */
+    --blue: #4F6D8C;          /* tinta pulpen biru */
+    --amber: #A86B26;         /* tinta cokelat keemasan */
+    --stamp: #A8423F;         /* merah cap pos */
+    --tape-rose: rgba(214, 150, 150, 0.72);
+    --tape-sage: rgba(160, 180, 140, 0.72);
+    --tape-mustard: rgba(222, 184, 104, 0.75);
+    --hand: 'Caveat', 'Segoe Print', 'Bradley Hand', cursive;
+    --type: 'Courier Prime', 'Courier New', Courier, monospace;
+    --shadow-paper: 0 1px 1px rgba(58,46,40,.12), 0 6px 14px rgba(58,46,40,.18);
+    --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .22 0 0 0 0 .14 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--type);
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--desk);
+    background-image: var(--noise),
+        radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.25), transparent 55%),
+        radial-gradient(ellipse at 80% 90%, rgba(90,60,30,.18), transparent 60%);
+    background-attachment: fixed;
+    color: var(--ink);
+    overflow-x: hidden;
+    min-height: 100vh;
+    line-height: 1.55;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--hand);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+}
+
+button { font-family: var(--type); }
+
+:focus-visible {
+    outline: 2px dashed var(--stamp);
+    outline-offset: 3px;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(58,46,40,.35); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- ELEMEN DEKORATIF BERSAMA ---------- */
+/* Kertas catatan */
+.paper-sheet,
+.cake-container, .mood-container, .mood-card-response, .item, .paper,
+.wish-card, .viewer-card, .wish-modal-content, .game-card, .quiz-container,
+.pin-box, .quiz-result, .reason-card, #arcadeGameBox, #shooterGameBox,
+#spinWheelBox, .birthday-message-card, .birthday-modal-content {
+    background-color: var(--paper);
+    background-image: var(--noise);
+    border: none;
+    box-shadow: var(--shadow-paper);
+    color: var(--ink);
+}
+
+/* Selotip washi (dipasang lewat ::before) */
+.birthday-message-card::before, .item::before, .gallery-item::before,
+.paper::before, .mood-card-response::before, .wish-modal-content::before,
+.birthday-modal-content::before, .viewer-card::before {
+    content: "";
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    width: 92px;
+    height: 24px;
+    transform: translateX(-50%) rotate(-3deg);
+    background: var(--tape-mustard);
+    background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0 6px, transparent 6px 12px);
+    box-shadow: 0 1px 2px rgba(58,46,40,.15);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ---------- SPLASH ---------- */
+#splash {
+    position: fixed;
+    inset: 0;
+    background-color: var(--desk);
+    background-image: var(--noise);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+#splash h1 {
+    font-size: clamp(44px, 15vw, 72px);
+    text-align: center;
+    padding: 0 16px;
+    color: var(--ink);
+    transform: rotate(-4deg);
+    margin-bottom: 6px;
+}
+#splash p {
+    font-size: 13px;
+    color: var(--ink-soft);
+}
+#splash.hide { opacity: 0; visibility: hidden; }
+#splash.ready { cursor: pointer; }
+.splash-open-btn {
+    margin-top: 26px;
+    padding: 12px 26px;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--rose);
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity .5s ease, transform .5s ease;
+}
+#splash.ready .splash-open-btn { opacity: 1; transform: none; pointer-events: auto; }
+.splash-open-btn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--rose); }
+
+/* ---------- HEADER (strip kertas sobek) ---------- */
+header {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: 80px;
+    background-color: var(--paper);
+    background-image: var(--noise);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px 0 15px;
+    z-index: 999;
+    box-shadow: 0 4px 10px rgba(58,46,40,.12);
+}
+header::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -8px;
+    height: 8px;
+    background:
+        linear-gradient(135deg, var(--paper) 33%, transparent 33%) 0 0 / 14px 8px repeat-x,
+        linear-gradient(225deg, var(--paper) 33%, transparent 33%) 0 0 / 14px 8px repeat-x;
+}
+
+.nav-left { display: flex; align-items: center; gap: 14px; font-size: 20px; }
+.icon-menu { cursor: pointer; color: var(--ink); transition: transform .2s; }
+.icon-menu:active { transform: scale(.85); }
+.icon-heart { cursor: pointer; transition: transform .2s; }
+.icon-heart:active { transform: scale(1.3); }
+
+.nav-center { text-align: center; }
+.terminal-path {
+    display: block;
+    font-family: var(--hand);
+    font-size: 15px;
+    color: var(--rose);
+    line-height: 1;
+    transform: rotate(-3deg);
+}
+.user-name {
+    margin: 0;
+    font-size: 24px;
+    color: var(--ink);
+}
+.user-date {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    display: block;
+    letter-spacing: .5px;
+}
+.nav-right { display: flex; align-self: stretch; align-items: flex-start; }
+.music-card.minimized { margin-top: 13px; }
+
+/* ---------- MUSIC PLAYER (label kaset) ---------- */
+.music-card {
+    background-color: var(--polaroid);
+    border-radius: 4px;
+    padding: 8px 10px;
+    width: 200px;
+    border: 1px solid rgba(58,46,40,.18);
+    box-shadow: var(--shadow-paper);
+    transition: all .3s ease;
+    transform: rotate(1.5deg) translateY(6px);
+    position: relative;
+    z-index: 3; /* di atas pinggiran kertas sobek header */
+}
+.music-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    border-bottom: 1px dashed rgba(58,46,40,.25);
+    padding-bottom: 4px;
+}
+.playlist-title { color: var(--stamp); display: flex; align-items: center; gap: 4px; font-family: var(--hand); font-size: 14px; }
+.header-icons { display: flex; gap: 6px; color: var(--ink-soft); }
+.icon-btn-action { cursor: pointer; user-select: none; }
+.music-body { display: flex; justify-content: space-between; align-items: center; }
+.song-info { display: flex; flex-direction: column; width: 100px; overflow: hidden; }
+.song-title {
+    margin: 0;
+    font-family: var(--hand);
+    font-size: 15px;
+    color: var(--ink);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.song-artist {
+    font-size: 9.5px;
+    color: var(--ink-soft);
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.music-controls { display: flex; gap: 3px; }
+.btn-ctrl {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 3px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.btn-ctrl:hover { background: var(--stamp); }
+.lyrics-box {
+    background: repeating-linear-gradient(transparent 0 13px, rgba(79,109,140,.18) 13px 14px);
+    padding: 4px 5px;
+    margin-top: 6px;
+    min-height: 24px;
+    max-height: 44px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lyrics-line {
+    font-family: var(--hand);
+    font-size: 13px;
+    color: var(--blue);
+    text-align: center;
+    line-height: 1.1;
+}
+
+.music-card.minimized {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--stamp);
+    border: 2px dashed rgba(253,251,246,.6);
+    box-shadow: 0 3px 8px rgba(58,46,40,.3);
+    transform: rotate(-8deg);
+}
+.music-card.minimized .music-header,
+.music-card.minimized .music-body,
+.music-card.minimized .lyrics-box { display: none !important; }
+.music-card.minimized::after { content: "🎵"; font-size: 17px; }
+
+/* ---------- OVERLAY / MODAL UMUM ---------- */
+.playlist-modal, .menu-modal {
+    position: fixed;
+    inset: 0;
+    background-color: var(--desk);
+    background-image: var(--noise);
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+}
+.menu-modal { z-index: 99999; overflow-y: auto; }
+.playlist-modal.active, .menu-modal.active { opacity: 1; visibility: visible; }
+
+.playlist-header, .menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed rgba(58,46,40,.3);
+}
+.playlist-header h3, .menu-header h3 { font-size: 28px; color: var(--ink); }
+.close-playlist, .close-menu {
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ink);
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper);
+    border-radius: 50%;
+    box-shadow: var(--shadow-paper);
+}
+
+.playlist-items { display: flex; flex-direction: column; gap: 0; overflow-y: auto; max-height: 75vh;
+    background-color: var(--paper); background-image: var(--noise); box-shadow: var(--shadow-paper); padding: 6px 0; }
+.playlist-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(79,109,140,.2);
+    transition: background .2s;
+}
+.playlist-item:last-child { border-bottom: none; }
+.playlist-item:active { background: rgba(201,120,122,.12); }
+.playlist-item.playing { background: rgba(222,184,104,.25); }
+.playlist-item-info { display: flex; flex-direction: column; }
+.playlist-item-title { font-family: var(--hand); font-size: 20px; color: var(--ink); line-height: 1.1; }
+.playlist-item.playing .playlist-item-title { color: var(--stamp); }
+.playlist-item-artist { font-size: 11px; color: var(--ink-soft); }
+.playlist-item-icon { font-size: 16px; }
+
+/* ---------- APP ---------- */
+.app {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ---------- NOTIFIKASI (sticky note) ---------- */
+.fake-notif {
+    position: fixed;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
+    width: 90%;
+    max-width: 400px;
+    background: #F4E3A1;
+    background-image: var(--noise);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 22px rgba(58,46,40,.3);
+    z-index: 999999;
+    transition: top .5s cubic-bezier(.175,.885,.32,1.275);
+}
+.fake-notif.show { top: 22px; }
+.notif-icon {
+    width: 40px; height: 40px;
+    background: var(--polaroid);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 2px var(--rose);
+}
+.notif-content { flex-grow: 1; }
+.notif-title { font-size: 12.5px; color: var(--ink); }
+.notif-subtitle { font-family: var(--hand); font-size: 17px; color: var(--blue); line-height: 1.2; margin-top: 2px; }
+
+/* ---------- HALAMAN ---------- */
+.page {
+    display: none;
+    padding: 112px 20px 125px 20px;
+    animation: fadeIn .45s ease-out;
+}
+.page.active { display: block; }
+.page h2 { font-size: 40px; margin-bottom: 18px; color: var(--ink); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Keterangan tulisan tangan di atas judul */
+.term-label {
+    display: inline-block;
+    font-family: var(--hand);
+    font-size: 19px;
+    color: var(--stamp);
+    transform: rotate(-2deg);
+    margin-bottom: 2px;
+}
+
+/* ---------- HOME ---------- */
+#home { text-align: center; }
+#home h1 {
+    margin-top: 6px;
+    font-size: 72px;
+    line-height: .95;
+    color: var(--ink);
+    transform: rotate(-3deg);
+    position: relative;
+    display: inline-block;
+}
+#home h1::after {
+    content: "";
+    display: block;
+    height: 12px;
+    margin: 2px auto 0;
+    width: 88%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C 40 2, 70 11, 110 5 S 175 3, 198 7' fill='none' stroke='%23C9787A' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+}
+#home > p { margin-top: 10px; color: var(--ink-soft); font-size: 14px; }
+
+/* Kue di dalam bingkai polaroid */
+.cake-container {
+    margin: 26px auto 0;
+    width: 86%;
+    background: var(--polaroid);
+    padding: 14px 14px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: rotate(2deg);
+    position: relative;
+}
+.cake-graphic {
+    position: relative;
+    width: 100%;
+    font-size: 64px;
+    line-height: 1;
+    padding: 30px 0 18px;
+    margin-bottom: 14px;
+    background: linear-gradient(160deg, #E9D9BF, #D8C3A0);
+    box-shadow: inset 0 0 30px rgba(58,46,40,.18);
+}
+.flame {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 22px;
+    animation: flicker .6s infinite alternate;
+    transition: opacity .5s ease;
+}
+@keyframes flicker {
+    0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: .9; }
+    100% { transform: translateX(-50%) scale(1.15) rotate(2deg); opacity: 1; }
+}
+.flame.off { opacity: 0 !important; animation: none; }
+
+.blow-btn {
+    background: none;
+    color: var(--ink);
+    border: none;
+    font-family: var(--hand);
+    font-size: 22px;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 2px 10px;
+    border-bottom: 2px solid var(--rose);
+    transition: transform .2s;
+}
+.blow-btn:active { transform: scale(.94); }
+.wish-text {
+    font-family: var(--hand);
+    font-size: 20px;
+    color: var(--blue);
+    margin-top: 8px;
+    line-height: 1.2;
+    display: none;
+    animation: fadeIn .5s ease;
+}
+
+/* Countdown kalender sobek */
+.countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 30px;
+}
+.countdown div {
+    background: var(--polaroid);
+    padding: 16px 4px 8px;
+    text-align: center;
+    position: relative;
+    box-shadow: var(--shadow-paper);
+    border-top: 12px solid var(--stamp);
+}
+.countdown div::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 4px;
+    background: radial-gradient(circle, var(--paper) 2px, transparent 2.5px) 0 0 / 9px 4px repeat-x;
+}
+.countdown div:nth-child(odd) { transform: rotate(-1.5deg); }
+.countdown div:nth-child(even) { transform: rotate(1.5deg); }
+.countdown h2 { font-family: var(--type); font-weight: 700; font-size: 26px; margin: 0; color: var(--ink); line-height: 1; }
+.countdown span { font-size: 10px; color: var(--ink-soft); }
+
+#openLetterBtn {
+    margin-top: 28px;
+    padding: 13px 26px;
+    border: 2px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--rose);
+    transition: transform .15s, box-shadow .15s;
+}
+#openLetterBtn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--rose); }
+
+/* Kartu pesan di atas home */
+.birthday-message-card {
+    position: relative;
+    margin: 8px 6px 18px;
+    padding: 26px 18px 20px;
+    text-align: center;
+    transform: rotate(-1.5deg);
+    background-image: var(--noise),
+        repeating-linear-gradient(transparent 0 25px, rgba(79,109,140,.16) 25px 26px);
+}
+.birthday-message-card .message-icon { font-size: 28px; margin-bottom: 2px; }
+.birthday-message-card h3 { font-size: 28px; margin-bottom: 4px; }
+.birthday-message-card p { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 14px; }
+#readBirthdayMessageBtn {
+    border: 0;
+    border-radius: 3px;
+    padding: 10px 18px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--stamp);
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(58,46,40,.25);
+}
+
+.birthday-modal {
+    position: fixed; inset: 0; z-index: 1000000; display: none;
+    align-items: center; justify-content: center; padding: 24px;
+    background: rgba(58,46,40,.55);
+}
+.birthday-modal.show { display: flex; }
+.birthday-modal-content {
+    position: relative;
+    width: min(100%, 430px);
+    max-height: 80vh;
+    overflow: auto;
+    padding: 30px 24px 22px 44px;
+    text-align: left;
+    animation: fadeIn .3s ease;
+    background-image: var(--noise),
+        linear-gradient(90deg, transparent 30px, rgba(168,66,63,.45) 30px 31.5px, transparent 31.5px),
+        repeating-linear-gradient(transparent 0 27px, rgba(79,109,140,.2) 27px 28px);
+    background-position: 0 0, 0 0, 0 12px;
+}
+.birthday-modal-content::before { display: none; }
+.birthday-modal-content h3 { text-align: center; font-size: 32px; margin-bottom: 10px; }
+.birthday-modal-content p { font-size: 13.5px; line-height: 28px; white-space: pre-line; }
+#closeBirthdayMessageBtn {
+    display: block; margin: 16px auto 0;
+    border: 1.5px solid var(--ink); border-radius: 3px;
+    padding: 8px 18px; color: var(--ink); background: transparent; cursor: pointer;
+}
+
+/* ---------- MOOD ---------- */
+.mood-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 12px;
+    padding: 16px 8px;
+    transform: rotate(-1deg);
+}
+.mood-btn {
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.mood-btn span { font-family: var(--hand); font-size: 16px; color: var(--ink); }
+.mood-btn:hover, .mood-btn.selected { transform: scale(1.18) rotate(-6deg); }
+
+.mood-card-response {
+    position: relative;
+    margin-top: 30px;
+    padding: 26px 22px 22px;
+    display: none;
+    animation: fadeIn .4s ease;
+    transform: rotate(1deg);
+    background-color: #F4E3A1;
+}
+.mood-card-response::before { background: var(--tape-rose); }
+.mood-card-response h3 { font-size: 26px; margin-bottom: 8px; color: var(--stamp); }
+.mood-card-response p { font-size: 14px; line-height: 1.65; }
+
+/* ---------- STORY / TIMELINE ---------- */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 18px;
+    padding-left: 14px;
+    border-left: 2px dashed rgba(58,46,40,.35);
+}
+.item {
+    position: relative;
+    padding: 24px 20px 20px;
+}
+.item:nth-child(odd) { transform: rotate(-1.2deg); }
+.item:nth-child(even) { transform: rotate(1.2deg); }
+.item:nth-child(3n+2)::before { background: var(--tape-rose); }
+.item:nth-child(3n)::before { background: var(--tape-sage); }
+.item::after {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 30px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--stamp);
+    box-shadow: 0 0 0 3px var(--desk);
+}
+.item h3 { margin: 0 0 8px; font-size: 24px; color: var(--ink); }
+.item p { font-size: 13.5px; line-height: 1.65; color: var(--ink); }
+
+.commit-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--stamp);
+    border: 1.5px solid var(--stamp);
+    border-radius: 3px;
+    padding: 1px 8px;
+    margin-bottom: 8px;
+    letter-spacing: .5px;
+    transform: rotate(-3deg);
+    opacity: .85;
+}
+.commit-tag-active { color: var(--sage); border-color: var(--sage); opacity: 1; }
+
+/* ---------- GALLERY: polaroid berserakan ---------- */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px 16px;
+    margin-top: 16px;
+    padding: 0 4px;
+}
+.gallery-item {
+    position: relative;
+    background: var(--polaroid);
+    padding: 9px 9px 40px;
+    cursor: pointer;
+    box-shadow: 0 2px 3px rgba(58,46,40,.15), 0 10px 20px rgba(58,46,40,.22);
+    transition: transform .25s ease;
+}
+.gallery-item:nth-child(4n+1) { transform: rotate(-3deg); }
+.gallery-item:nth-child(4n+2) { transform: rotate(2.5deg) translateY(10px); }
+.gallery-item:nth-child(4n+3) { transform: rotate(1.5deg); }
+.gallery-item:nth-child(4n+4) { transform: rotate(-2deg) translateY(10px); }
+.gallery-item:nth-child(3n+1)::before { background: var(--tape-rose); }
+.gallery-item:nth-child(3n+2)::before { background: var(--tape-sage); transform: translateX(-50%) rotate(4deg); }
+.gallery-item::before { width: 70px; height: 20px; top: -9px; }
+.gallery-item:hover, .gallery-item:focus-within { transform: rotate(0) scale(1.03); z-index: 3; }
+
+.gallery-item img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    filter: sepia(.18) saturate(.9) contrast(1.03);
+}
+.gallery-badge {
+    position: absolute;
+    left: 8px; right: 8px;
+    bottom: 7px;
+    font-family: var(--hand);
+    font-size: 17px;
+    line-height: 1.1;
+    color: var(--ink);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+/* ---------- VIEWER FOTO ---------- */
+#viewer {
+    position: fixed;
+    inset: 0;
+    background: rgba(58,46,40,.88);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+    z-index: 99999;
+    overflow-y: auto;
+}
+#viewer.show { opacity: 1; visibility: visible; }
+.viewer-container {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    animation: fadeIn .4s ease;
+}
+#viewer img {
+    width: 100%;
+    max-height: 52vh;
+    object-fit: contain;
+    background: var(--polaroid);
+    padding: 10px 10px 34px;
+    transform: rotate(-1.5deg);
+    box-shadow: 0 16px 34px rgba(0,0,0,.45);
+}
+.viewer-card { position: relative; padding: 22px 18px 16px; width: 100%; text-align: left; transform: rotate(1deg); }
+.viewer-card::before { background: var(--tape-sage); }
+.viewer-title { font-family: var(--hand); font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.1; margin-bottom: 2px; }
+.viewer-date { font-size: 11px; color: var(--stamp); margin-bottom: 8px; display: block; }
+.viewer-text { font-size: 13.5px; line-height: 1.6; }
+#closeViewer {
+    position: absolute;
+    top: 18px; right: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ink);
+    z-index: 100000;
+    width: 40px; height: 40px;
+    background: var(--paper);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* ---------- LETTER: amplop + kertas bergaris ---------- */
+.envelope { margin-top: 16px; cursor: pointer; perspective: 900px; }
+.cover {
+    position: relative;
+    height: 210px;
+    background-color: #C9AE82;
+    background-image: var(--noise),
+        linear-gradient(to bottom right, transparent 49.5%, rgba(58,46,40,.18) 50%, transparent 51%),
+        linear-gradient(to bottom left, transparent 49.5%, rgba(58,46,40,.18) 50%, transparent 51%),
+        linear-gradient(to top right, transparent 49.5%, rgba(58,46,40,.12) 50%, transparent 51%),
+        linear-gradient(to top left, transparent 49.5%, rgba(58,46,40,.12) 50%, transparent 51%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0;
+    transition: .6s;
+    box-shadow: var(--shadow-paper);
+    transform-origin: top;
+}
+.cover::after {
+    content: "";
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #C45A55, var(--stamp) 60%, #7E2E2C);
+    box-shadow: 0 3px 6px rgba(0,0,0,.3), inset 0 0 0 5px rgba(0,0,0,.08);
+}
+.cover::before {
+    content: "ketuk untuk membuka";
+    position: absolute;
+    bottom: 14px;
+    font-family: var(--hand);
+    font-size: 19px;
+    color: var(--ink);
+    opacity: .75;
+}
+.paper {
+    position: relative;
+    display: none;
+    padding: 30px 22px 28px 50px;
+    margin-top: 22px;
+    animation: fadeIn .5s ease;
+    background-image: var(--noise),
+        linear-gradient(90deg, transparent 36px, rgba(168,66,63,.45) 36px 37.5px, transparent 37.5px),
+        repeating-linear-gradient(transparent 0 29px, rgba(79,109,140,.22) 29px 30px);
+    background-position: 0 0, 0 0, 0 16px;
+}
+.paper p { white-space: pre-line; font-size: 14px; line-height: 30px; }
+
+/* ---------- WISH: kartu indeks ---------- */
+.wish-card {
+    position: relative;
+    margin-top: 16px;
+    padding: 16px 18px 14px;
+    border-top: 6px solid var(--rose);
+    cursor: pointer;
+    transition: transform .2s;
+}
+.wish-card:nth-of-type(odd) { transform: rotate(-1deg); }
+.wish-card:nth-of-type(even) { transform: rotate(1deg); border-top-color: var(--sage); }
+.wish-card:active { transform: scale(.98); }
+.wish-card h3 {
+    font-size: 25px;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wish-card h3::after { content: "baca ›"; font-family: var(--type); font-size: 11px; font-weight: 400; color: var(--ink-soft); }
+
+.wish-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(58,46,40,.55);
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+}
+.wish-modal.active { opacity: 1; visibility: visible; }
+.wish-modal-content {
+    position: relative;
+    padding: 30px 24px 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    animation: fadeIn .4s ease;
+    transform: rotate(-1deg);
+}
+.wish-modal-content::before { background: var(--tape-rose); }
+.wish-modal-content h3 { font-size: 30px; margin-bottom: 12px; }
+.wish-modal-content p { font-size: 14px; line-height: 1.7; margin-bottom: 20px; }
+.close-wish-modal {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 3px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+/* ---------- MENU GAME ---------- */
+.game-select-container { display: flex; flex-direction: column; gap: 18px; margin-top: 10px; }
+.game-card {
+    position: relative;
+    padding: 18px 18px 16px;
+    cursor: pointer;
+    transition: transform .2s;
+    border-left: 5px solid var(--rose);
+}
+.game-card:nth-child(odd) { transform: rotate(-.6deg); }
+.game-card:nth-child(even) { transform: rotate(.6deg); border-left-color: var(--sage); }
+.game-card:active { transform: scale(.97); }
+.game-card h4 { font-size: 23px; margin-bottom: 4px; color: var(--ink); }
+.game-card p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+
+.quiz-container { padding: 20px; margin-top: 10px; display: none; }
+.quiz-question { font-family: var(--hand); font-size: 26px; font-weight: 700; line-height: 1.15; margin-bottom: 16px; color: var(--ink); }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-btn {
+    background: var(--polaroid);
+    border: 1.5px solid rgba(58,46,40,.5);
+    color: var(--ink);
+    padding: 12px 15px;
+    border-radius: 3px;
+    text-align: left;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: .15s;
+}
+.quiz-btn:hover { background: #FFF6DE; }
+.quiz-btn:active { transform: scale(.98); }
+
+.back-to-menu-btn {
+    margin-bottom: 14px;
+    background: none;
+    border: none;
+    color: var(--stamp);
+    font-family: var(--hand);
+    font-size: 19px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quiz-result {
+    margin-top: 20px;
+    padding: 22px;
+    text-align: center;
+    display: none;
+    animation: fadeIn .4s ease;
+    border: 2px dashed var(--sage);
+}
+.quiz-result h4 { font-size: 30px; margin-bottom: 8px; color: var(--sage); }
+.quiz-result p { font-size: 14px; line-height: 1.6; margin-bottom: 15px; }
+
+/* ---------- PIN ---------- */
+.pin-box { display: none; padding: 26px 20px; text-align: center; animation: fadeIn .4s ease; }
+.pin-box h4 { font-size: 28px; margin-bottom: 6px; }
+.pin-box p { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 16px; }
+.pin-input {
+    width: 160px;
+    padding: 8px 10px;
+    font-size: 18px;
+    letter-spacing: 5px;
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    outline: none;
+    margin-bottom: 18px;
+}
+.pin-input:focus { border-bottom-color: var(--stamp); }
+.pin-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 3px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--rose);
+}
+
+/* ---------- 10 REASONS ---------- */
+.reasons-container { display: none; flex-direction: column; gap: 12px; margin-top: 10px; }
+#downloadableReasonsCard {
+    background-color: var(--paper) !important;
+    background-image: var(--noise);
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 20px 16px !important;
+    box-shadow: var(--shadow-paper);
+}
+#downloadableReasonsCard h3 { font-size: 30px; color: var(--stamp) !important; }
+.reason-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 10px 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px dashed rgba(58,46,40,.25);
+    animation: fadeIn .4s ease;
+}
+.reason-num {
+    color: var(--stamp);
+    border: 1.5px solid var(--stamp);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    transform: rotate(-8deg);
+}
+.reason-text { font-size: 13.5px; line-height: 1.5; }
+
+.ss-notice {
+    background: #F4E3A1;
+    padding: 12px;
+    font-size: 12.5px !important;
+    color: var(--ink);
+    margin-top: 16px;
+    font-weight: 700;
+    transform: rotate(-1deg);
+    box-shadow: var(--shadow-paper);
+}
+
+/* ---------- ARCADE ---------- */
+#arcadeGameBox, #shooterGameBox, #spinWheelBox { padding: 16px; margin-top: 10px; display: none; text-align: center; }
+#shooterGameBox { position: relative; min-height: 380px; }
+#gameCanvas {
+    background: #3A2E28;
+    border: 6px solid var(--polaroid);
+    box-shadow: var(--shadow-paper);
+    display: block;
+    margin: 10px auto;
+    touch-action: none;
+    max-width: 100%;
+}
+.arcade-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 0 6px;
+    margin-bottom: 5px;
+}
+
+/* ---------- SHOOTER ---------- */
+#shooterPlayArea {
+    background-color: var(--polaroid) !important;
+    background-image: repeating-linear-gradient(0deg, rgba(79,109,140,.12) 0 1px, transparent 1px 20px),
+        repeating-linear-gradient(90deg, rgba(79,109,140,.12) 0 1px, transparent 1px 20px) !important;
+    border: 1.5px solid rgba(58,46,40,.3) !important;
+    border-radius: 0 !important;
+}
+.bubble-target {
+    position: absolute;
+    background: var(--rose);
+    border: 2px dashed var(--polaroid);
+    border-radius: 50%;
+    padding: 10px;
+    width: 76px; height: 76px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(58,46,40,.3);
+    animation: popIn .3s ease;
+    user-select: none;
+}
+@keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+
+/* ---------- SPIN WHEEL ---------- */
+.wheel-container { position: relative; width: 240px; height: 240px; margin: 25px auto 15px auto; }
+#spinCanvas { border-radius: 50%; border: 6px solid var(--polaroid); box-shadow: var(--shadow-paper); }
+.wheel-pointer {
+    position: absolute;
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-top: 22px solid var(--ink);
+    z-index: 10;
+}
+.spin-result-card {
+    background: #F4E3A1;
+    border: none !important;
+    padding: 14px;
+    margin-top: 15px;
+    min-height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(-1deg);
+    box-shadow: var(--shadow-paper);
+}
+#spinResultText { color: var(--ink) !important; font-style: normal !important; }
+
+/* ---------- SLIDER PESAN RAHASIA (kertas milimeter) ---------- */
+.duyung-slide {
+    animation: fadeIn .4s ease;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+    background-color: var(--polaroid);
+    background-image: repeating-linear-gradient(0deg, rgba(111,138,94,.18) 0 1px, transparent 1px 16px),
+        repeating-linear-gradient(90deg, rgba(111,138,94,.18) 0 1px, transparent 1px 16px);
+    border: 1.5px solid rgba(111,138,94,.5);
+}
+.recap-video-wrap {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    background: #000;
+    border: 8px solid var(--polaroid);
+    border-bottom-width: 26px;
+    box-shadow: var(--shadow-paper);
+}
+.recap-video { width: 100%; max-height: 520px; display: block; background: #000; object-fit: contain; }
+.video-error-note { display: none; margin-top: 10px; font-size: 12px; color: var(--stamp); }
+
+/* ---------- BOTTOM NAV (strip kertas) ---------- */
+nav {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-.5deg);
+    width: calc(100% - 28px);
+    max-width: 450px;
+    height: 66px;
+    background-color: var(--paper);
+    background-image: var(--noise);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 6px 18px rgba(58,46,40,.3);
+    z-index: 999;
+}
+nav::before, nav::after {
+    content: "";
+    position: absolute;
+    top: -9px;
+    width: 46px; height: 18px;
+    background: var(--tape-sage);
+}
+nav::before { left: 10px; transform: rotate(-12deg); }
+nav::after { right: 10px; transform: rotate(10deg); background: var(--tape-rose); }
+nav button {
+    background: none;
+    border: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    gap: 1px;
+    cursor: pointer;
+    transition: .25s;
+    width: 16%;
+    opacity: .55;
+}
+nav span { font-family: var(--hand); font-size: 15px; line-height: 1; }
+nav button.active { opacity: 1; transform: translateY(-4px); }
+nav button.active span { text-decoration: underline wavy var(--rose); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Amplop terlipat & menghilang setelah diketuk (JS memberi inline rotateX) */
+.cover[style*="rotateX"] {
+    height: 0 !important;
+    opacity: 0 !important;
+    transform: none !important;
+    overflow: hidden;
+}
+.cover[style*="rotateX"] + .paper { margin-top: 18px; }
