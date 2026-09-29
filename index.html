@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Sayangku</title>
+    <!-- Library Konfeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Library html2canvas untuk Fitur Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Font: tulisan tangan + mesin ketik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/features.css">
+</head>
+<body>
+
+    <!-- NOTIFIKASI LIKE "LIKED YOUR PHOTO" -->
+    <div class="fake-notif" id="fakeNotif">
+        <div class="notif-icon">❤️</div>
+        <div class="notif-content">
+            <div class="notif-title"><b>emeralda</b> liked your personality. <span style="opacity:0.6; font-weight:normal;">1s</span></div>
+            <div class="notif-subtitle">"Sebab kamu adalah alasan di balik senyumku setiap hari."</div>
+        </div>
+    </div>
+
+    <!-- MODAL DAFTAR PLAYLIST -->
+    <div class="playlist-modal" id="playlistModal">
+        <div class="playlist-header">
+            <h3>🎵 Daftar Lagu Spesial</h3>
+            <span class="close-playlist" id="closePlaylistBtn">✕</span>
+        </div>
+        <div class="playlist-items" id="playlistItems"></div>
+    </div>
+
+    <!-- MODAL POPUP WISH DETAIL -->
+    <div class="wish-modal" id="wishModal">
+        <div class="wish-modal-content">
+            <h3 id="wishModalTitle">Judul Doa</h3>
+            <p id="wishModalText">Isi doa lengkap...</p>
+            <button class="close-wish-modal" id="closeWishModalBtn">Tutup ✨</button>
+        </div>
+    </div>
+
+    <!-- AUDIO PLAYER HIDDEN -->
+    <audio id="bgMusic"></audio>
+
+
+    <!-- BIRTHDAY MESSAGE MODAL -->
+    <div class="birthday-modal" id="birthdayMessageModal">
+        <div class="birthday-modal-content">
+            <h3>💌 For You</h3>
+            <p>Selamat ulang tahun, Sayang. 🤍
+
+Semoga di umur yang baru, semua hal baik datang satu per satu ke hidupmu. Semoga langkahmu selalu membawa kamu ke tempat-tempat yang membuatmu bahagia, dan semoga kamu selalu punya alasan untuk tersenyum.
+
+Terima kasih sudah hadir dan menjadi bagian dari begitu banyak cerita. Aku harap hari ini kamu bisa merasakan betapa berharganya kamu.
+
+Semoga semua hal yang kamu impikan pelan-pelan menjadi nyata. Dan kalau perjalanan hidup nanti membawa kita ke banyak tempat, semoga selalu ada jalan yang membuat kita bisa selalu bersama. 🌿
+
+Happy birthday, Sayang. 🎂❤️</p>
+            <button id="closeBirthdayMessageBtn">Tutup ✨</button>
+        </div>
+    </div>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash">
+        <h1>Happy Birthday</h1>
+        <p id="splashStatus">membuka album kenangan...</p>
+        <button id="splashOpenBtn" class="splash-open-btn">Buka albumnya 🎵</button>
+    </div>
+
+    <div class="app">
+        <!-- TOP BAR HEADER -->
+        <header>
+            <div class="nav-left">
+                <span class="icon-menu" id="openMenuBtn">☰</span>
+                <span class="icon-heart" id="loveHeaderBtn">❤️</span>
+            </div>
+
+            <div class="nav-center">
+                <span class="terminal-path">untuk cowok aku</span>
+                <h2 class="user-name">Muhammad Sandy</h2>
+                <span class="user-date">30 September</span>
+            </div>
+
+            <div class="nav-right">
+                <div class="music-card minimized" id="musicPlayerCard">
+                    <div class="music-header">
+                        <div class="playlist-title">
+                            <span>🎵</span>
+                            <span>Lagu Untukmu </span>
+                        </div>
+                        <div class="header-icons">
+                            <span class="icon-btn-action" id="openPlaylistBtn" title="Daftar Lagu">📜</span>
+                            <span class="icon-btn-action" id="togglePlayerBtn" title="Sembunyikan Player">—</span>
+                        </div>
+                    </div>
+
+                    <div class="music-body">
+                        <div class="song-info">
+                            <h4 class="song-title" id="songTitle">Serta Mulia</h4>
+                            <span class="song-artist" id="songArtist">Sal Priadi</span>
+                        </div>
+                        <div class="music-controls">
+                            <button class="btn-ctrl" id="prevBtn">⏮</button>
+                            <button class="btn-ctrl" id="playBtn">▶</button>
+                            <button class="btn-ctrl" id="nextBtn">⏭</button>
+                        </div>
+                    </div>
+
+                    <div class="lyrics-box">
+                        <div class="lyrics-line" id="lyricText">🎵 Klik Play untuk putar musik</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- HOME -->
+        <section id="home" class="page active">
+            <div class="birthday-message-card">
+                <div class="message-icon">💌</div>
+                <h3>A Little Message for You</h3>
+                <p>There's something I want you to know today...</p>
+                <button id="readBirthdayMessageBtn">Read My Message 💙</button>
+            </div>
+            <span class="term-label">untuk Sandy, 30.09</span>
+            <h1>Happy Birthday</h1>
+            <p>Semoga hari ini menjadi hari terbaikmu.</p>
+
+            <div class="cake-container">
+                <div class="cake-graphic">
+                    <span class="flame" id="candleFlame">🔥</span>
+                    🎂
+                </div>
+                <button class="blow-btn" id="blowCandleBtn">🕯️ Tiup Lilin Ulang Tahun</button>
+                <div class="wish-text" id="wishText">✨ Make a wish, Sayang! Semoga semua doamu dikabulkan ✨</div>
+            </div>
+
+            <div class="countdown">
+                <div><h2 id="days">00</h2><span>Days</span></div>
+                <div><h2 id="hours">00</h2><span>Hours</span></div>
+                <div><h2 id="minutes">00</h2><span>Minutes</span></div>
+                <div><h2 id="seconds">00</h2><span>Seconds</span></div>
+            </div>
+
+
+            <button id="openLetterBtn">Open Letter 💌</button>
+        </section>
+
+        <!-- MOOD TRACKER PAGE -->
+        <section id="mood" class="page">
+            <span class="term-label">catatan hari ini</span>
+            <h2>🎨 How are you feeling today?</h2>
+            <p style="font-size: 13px; opacity: 0.8; margin-bottom: 15px;">Pilih mood kamu hari ini dan lihat pesan khusus dari Emeralda untukmu! 🤍</p>
+
+            <div class="mood-container">
+                <button class="mood-btn" onclick="selectMood('happy')">😊<span>Happy</span></button>
+                <button class="mood-btn" onclick="selectMood('tired')">🥱<span>Tired</span></button>
+                <button class="mood-btn" onclick="selectMood('miss')">🥺<span>Miss You</span></button>
+                <button class="mood-btn" onclick="selectMood('stress')">😤<span>Stressed</span></button>
+                <button class="mood-btn" onclick="selectMood('excited')">🥳<span>Party</span></button>
+            </div>
+
+            <div class="mood-card-response" id="moodResponse">
+                <h3 id="moodTitle">Judul Mood</h3>
+                <p id="moodMessage">Pesan respons mood akan muncul di sini...</p>
+            </div>
+        </section>
+
+        <!-- OUR STORY -->
+        <section id="story" class="page">
+            <span class="term-label">dari awal sampai sekarang</span>
+            <h2>🗺️ Journey Mapping</h2>
+            <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px; margin-top: -15px;">Koordinat perjalanan cinta kita dari awal hingga saat ini. 📍</p>
+            <div class="timeline">
+                <div class="item">
+                    <span class="commit-tag">Bab 1</span>
+                    <h3>📍Waypoint 01: Initial Signal Detection </h3>
+                    <p>Awalnya nggak saling kenal, tapi kamu beberapa kali muncul di viewrs story-ku. Nggak lama, kamu ngefollow. Dari situ radar kepoku aktif, aku mulai stalking sosmed kamu, bahkan sampai ke LinkedIn! HAHAHA🕵️‍♀️</p>
+                </div>
+                <div class="item">
+                    <span class="commit-tag">Bab 2</span>
+                    <h3>📲Waypoint 02: Migration (Dari DM ke Chat WA)</h3>
+                    <p>Mulai sapa-sapaan lewat DM, sampai akhirnya kamu ngajak <i>move</i> ke WhatsApp. Dari chat santai berlanjut ke sesi telepon pertama kali yang bikin makin akrab.</p>
+                </div>
+                <div class="item">
+                    <span class="commit-tag">Bab 3</span>
+                    <h3>☕Waypoint 03: Ground Truth Validation (First Date)</h3>
+                    <p>Momen ketemuan langsung untuk membuktikan sinyal. Ternyata tiap kali ngobrol dan berbagi cerita rasanya nyambung banget, frekuensinya pas, dan bikin nyaman.</p>
+                </div>
+                <div class="item">
+                    <span class="commit-tag">Bab 4</span>
+                    <h3>🚅 Waypoint 04: Long-Distance Overlay (Eksplorasi 4 Hari di Bandung)</h3>
+                    <p>Niat banget kamu nyamperin aku ke Bandung! Kita jalan-jalan, main, dan bikin kenangan manis bareng selama 4 hari penuh di sana.</p>
+                </div>
+                <div class="item">
+                    <span class="commit-tag">Bab 5</span>
+                    <h3>💖 Checkpoint: Official Coordinate Lock </h3>
+                    <p>Titik balik di mana dua insan resmi dikunci menjadi satu tujuan perjalanan yang sama.</p>
+                </div>
+                <div class="item">
+                    <span class="commit-tag commit-tag-active">Sekarang</span>
+                    <h3>🎯 Target: Continuous Tracking (Hari Ini & Seterusnya)</h3>
+                    <p>Perjalanan yang terus berlanjut sampai hari ini, merayakan bertambahnya usiamu dengan penuh suka cita dan doa-doa terbaik! ✨🎂</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY WITH STORY/CAPTION -->
+        <section id="gallery" class="page">
+            <span class="term-label">isi album kita</span>
+            <h2>📷 Memory Gallery</h2>
+            <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px; margin-top: -15px;">Klik foto untuk membaca cerita di baliknya! ✨</p>
+
+            <div class="gallery" id="galleryGrid">
+                <!-- Diisi otomatis oleh js/gallery.js berdasarkan galleryData di js/data.js -->
+            </div>
+        </section>
+
+        <!-- LETTER WITH ENVELOPE -->
+        <section id="letter" class="page">
+            <span class="term-label">dibaca pelan-pelan ya</span>
+            <h2>💌 Letter</h2>
+            <div class="envelope">
+                <div class="cover" aria-label="Buka amplop surat"></div>
+                <div class="paper">
+                    <p id="typedText"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WISH -->
+        <section id="wish" class="page">
+            <span class="term-label">doa-doa kecilku</span>
+            <h2>❤️ My Wishes</h2>
+            <p style="font-size: 13px; opacity: 0.8; margin-bottom: 15px; margin-top: -15px;">Klik salah satu kartu di bawah untuk membaca doa lengkapnya ya! 👇</p>
+
+            <div class="wish-card" onclick="openWishModal('✨ Endless Happiness', 'May your year ahead be filled with endless joy, peace, and pure happiness. Semoga hari-harimu ke depan selalu dilingkupi kebahagiaan yang nggak ada habisnya, ya!')">
+                <h3>Endless Happiness</h3>
+            </div>
+            <div class="wish-card" onclick="openWishModal('🚀 Career & Dreams', 'Wishing you endless success and open doors to all your biggest dreams. Semoga semua urusan karier, dan cita-citamu dimudahkan serta tercapai satu per satu!')">
+                <h3>Career & Dreams</h3>
+            </div>
+            <div class="wish-card" onclick="openWishModal('🌊 Inner Peace', 'Semoga hatimu selalu ditenangkan dan dilindungi dari hal-hal yang berat. Kalau lagi lelah, ingat ada aku yang selalu siap jadi tempat kamu pulang dan bersandar.')">
+                <h3>Inner Peace</h3>
+            </div>
+            <div class="wish-card" onclick="openWishModal('💫 Growth & Strength', 'May you keep growing into the amazing, strong person you are meant to be. Tetap jadi pribadi hebat yang tangguh menghadapi segala rintangan ya, Sayang!')">
+                <h3>Growth & Strength</h3>
+            </div>
+            <div class="wish-card" onclick="openWishModal('🌻 Health & Longevity', 'Semoga selalu diberi kesehatan, umur yang panjang, dan raga yang kuat. Jangan lupa jaga kesehatan dan jangan keseringan begadang ya!')">
+                <h3>Health & Longevity</h3>
+            </div>
+
+            <button id="openGuestbookBtn" class="guestbook-entry-btn">🌟 Tulis Harapanmu di Sini</button>
+        </section>
+
+        <!-- HARAPAN SANDY (DIAKSES DARI HALAMAN WISH, TIDAK DI BOTTOM NAV) -->
+        <section id="guestbook" class="page">
+            <button class="back-to-menu-btn" onclick="switchTab('wish')" style="margin-bottom: 10px;">🡸 Kembali ke Wish</button>
+            <span class="term-label">giliran kamu yang nulis</span>
+            <h2>🌟 Harapan di Ulang Tahunmu</h2>
+            <p style="font-size: 13px; opacity: 0.8; margin-bottom: 15px; margin-top: -15px;">Boleh cerita ke aku, apa harapan terbesarmu di usia baru ini, Sayang? 🤍</p>
+
+            <div class="guestbook-form">
+                <textarea id="guestbookMessage" class="guestbook-textarea" placeholder="Apa harapan terbesarmu tahun ini, Sayang?" maxlength="500" rows="4"></textarea>
+                <button class="pin-btn" id="guestbookSubmitBtn" style="width:100%;">Kirim ke Emeralda 💌</button>
+                <p id="guestbookStatus" class="guestbook-status"></p>
+            </div>
+
+            <div id="guestbookList" class="guestbook-list"></div>
+        </section>
+
+        <!-- BOTTOM NAV -->
+        <nav>
+            <button data-page="home" class="active">🏠<span>Home</span></button>
+            <button data-page="mood">🎨<span>Mood</span></button>
+            <button data-page="story">📖<span>Story</span></button>
+            <button data-page="gallery">📷<span>Gallery</span></button>
+            <button data-page="letter">💌<span>Letter</span></button>
+            <button data-page="wish">❤<span>Wish</span></button>
+        </nav>
+    </div>
+
+    <!-- MODAL POPUP GAME & KUIS -->
+    <div id="menuModal" class="menu-modal">
+        <div class="menu-header">
+            <h3>🎮 Games & Quiz Rahasia</h3>
+            <span class="close-menu" id="closeMenuBtn">✕</span>
+        </div>
+
+        <div id="gameSelect" class="game-select-container">
+
+            <div class="game-card" onclick="startSpinWheel()">
+                <h4>🎡 Spin Wheel: Gombalan & Fakta Rahasia</h4>
+                <p>Putar rodanya untuk melihat pesan gombalan acak atau alasan kenapa aku sayang sama kamu! 💖</p>
+            </div>
+            <div class="game-card" onclick="startArcadeGame()">
+                <h4>🧺 Mini-Game: "Catch the Love" </h4>
+                <p> Untuk berhasil game ini harus menangkap minimal 15 hati, cokelat, atau kado berjatuhan!</p>
+            </div>
+            <div class="game-card" onclick="startShooterGame()">
+                <h4>🎯 Mini-Game: "Love Shooter"</h4>
+                <p>Klik teks gombalan secepat mungkin sebelum hilang untuk mengumpulkan skor pembuktian sayang!</p>
+            </div>
+            <div class="game-card" onclick="startMemoryGame()">
+                <h4>🧩 Mini-Game: "Memory Match" Foto Kita</h4>
+                <p>Cocokkan pasangan foto kenangan kita secepat mungkin dengan langkah paling sedikit!</p>
+            </div>
+            <div class="game-card" onclick="startLetterGenerator()">
+                <h4>💌 Generator Surat Cinta</h4>
+                <p>Pilih mood, dan biarkan aku merangkai surat cinta dadakan khusus buat kamu! ✨</p>
+            </div>
+<div class="game-card" onclick="startQuiz('moment')">
+                <h4>🧩 Teka-Teki </h4>
+                <p>Uji seberapa tau kamu</p>
+            </div>
+            <div class="game-card" onclick="startQuiz('aboutMe')">
+                <h4>✨ Seberapa Tau Kamu Tentang Aku?</h4>
+                <p>Kuis khusus buat ngetes seberapa peka dan kenal kamu sama aku! 😉</p>
+            </div>
+            <div class="game-card" onclick="showPinPrompt()">
+                <h4>💖 10 Reasons Why I Love You 🔒</h4>
+                <p>10 Alasan kenapa kamu itu sosok yang spesial banget buat aku (Terkunci).</p>
+            </div>
+            <div class="game-card" onclick="showPinDuyung()">
+                <h4>🧜‍♀️ Rahasia 🔒</h4>
+                <p>Pesan rahasia buat pacar tersayang (Terkunci).</p>
+            </div>
+
+            <!-- Strip Tambahan 2: Link Spotify Cadangan / Alternatif -->
+            <a href="https://open.spotify.com/playlist/6WmIDLhPxAkIv05T148hza?si=be175632b8944bab" target="_blank" class="game-card" style="text-decoration:none; display: block;">
+                <h4>🎧 Shortcut Spotify Playlist 🎵</h4>
+                <p>Palylist aku dan kamu, Hehehe </p>
+            </a>
+
+            <div class="game-card" onclick="openCertificateCard()" style="border-left-color: #A86B26;">
+                <h4>🏆 Sertifikat Penghargaan Spesial ✨</h4>
+                <p>Klaim sertifikat resmi sebagai "Pacar Paling Hebat & Favorit" hari ini!</p>
+            </div>
+        </div>
+
+        <!-- SPIN WHEEL CONTAINER -->
+        <div id="spinWheelBox">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()"> 🡸 Kembali ke Pilihan Game</button>
+            <h4 style="color:#A8423F; margin-bottom: 5px;">🎡 Spin Wheel Gombalan Rahasia</h4>
+            <p style="font-size: 11px; opacity: 0.8; margin-bottom: 10px;">Putar roda misterius ini untuk membongkar isi hatiku!</p>
+
+            <div class="wheel-container">
+                <div class="wheel-pointer"></div>
+                <canvas id="spinCanvas" width="240" height="240"></canvas>
+            </div>
+
+            <button class="quiz-btn" id="spinBtn" style="width:100%; text-align:center; background:#6F8A5E; color:#F7F1E3; border-color:#6F8A5E; font-weight:bold; margin-top:5px;" onclick="spinTheWheel()">🚀 Putar Roda Sekarang!</button>
+
+            <div class="spin-result-card" id="spinResultCard">
+                <span id="spinResultText" style="font-size: 13px; color: #A86B26; text-align: center; font-style: italic;">❓ Klik tombol putar di atas untuk melihat hasilnya...</span>
+            </div>
+        </div>
+
+        <!-- ARCADE MINI-GAME CONTAINER -->
+        <div id="arcadeGameBox">
+            <button class="back-to-menu-btn" onclick="stopArcadeGame(); backToGameSelect();">🡸 Kembali ke Pilihan Game</button>
+            <div class="arcade-info">
+                <span id="arcadeScore">Skor: 0</span>
+                <span id="arcadeTarget">Target Min: 15</span>
+                <span id="arcadeTimer">Waktu: 25s</span>
+            </div>
+            <canvas id="gameCanvas" width="320" height="400"></canvas>
+            <button class="quiz-btn" id="arcadeStartBtn" style="width:100%; text-align:center; background:#6F8A5E; color:#F7F1E3; border-color:#6F8A5E; margin-top:10px;" onclick="initArcadeGame()">Mulai Game 🚀</button>
+        </div>
+
+        <!-- SHOOTER MINI-GAME CONTAINER -->
+        <div id="shooterGameBox">
+            <button class="back-to-menu-btn" onclick="stopShooterGame(); backToGameSelect();">🡸 Kembali ke Pilihan Game</button>
+            <div class="arcade-info">
+                <span id="shooterScore">Skor: 0</span>
+                <span id="shooterTimer">Waktu: 20s</span>
+            </div>
+            <div id="shooterPlayArea" style="position:relative; height:280px; width:100%; overflow:hidden; border:1.5px solid rgba(58,46,40,.3); background:#FDFBF6; margin-top:10px;"></div>
+            <button class="quiz-btn" id="shooterStartBtn" style="width:100%; text-align:center; background:#6F8A5E; color:#F7F1E3; border-color:#6F8A5E; margin-top:10px;" onclick="initShooterGame()">Mulai Tembak Gombalan 🚀</button>
+        </div>
+
+        <!-- MEMORY MATCH MINI-GAME CONTAINER -->
+        <div id="memoryGameBox">
+            <button class="back-to-menu-btn" onclick="backToGameSelect();">🡸 Kembali ke Pilihan Game</button>
+            <div class="arcade-info">
+                <span id="memoryMoves">Langkah: 0</span>
+                <span id="memoryTimer">Waktu: 0s</span>
+                <span id="memoryMatched">Cocok: 0/6</span>
+            </div>
+            <div id="memoryGrid" class="memory-grid"></div>
+            <button class="quiz-btn" id="memoryStartBtn" style="width:100%; text-align:center; background:#6F8A5E; color:#F7F1E3; border-color:#6F8A5E; margin-top:10px;" onclick="initMemoryGame()">Mulai / Ulangi 🔄</button>
+        </div>
+
+        <!-- LETTER GENERATOR CONTAINER -->
+        <div id="letterGenBox" class="quiz-container" style="text-align:center; padding: 18px;">
+            <button class="back-to-menu-btn" onclick="backToGameSelect();">🡸 Kembali ke Pilihan Game</button>
+            <h4 style="color:#A86B26; margin-bottom: 5px;">💌 Generator Surat Cinta</h4>
+            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 12px;">Pilih mood suratnya dulu ya!</p>
+
+            <div class="letter-mood-select" id="letterMoodSelect">
+                <button class="quiz-btn letter-mood-btn" onclick="generateLetter('romantic')">🥰 Baper / Romantic</button>
+                <button class="quiz-btn letter-mood-btn" onclick="generateLetter('funny')">😜 Kocak / Receh</button>
+                <button class="quiz-btn letter-mood-btn" onclick="generateLetter('grateful')">🤍 Bersyukur</button>
+                <button class="quiz-btn letter-mood-btn" onclick="generateLetter('future')">✨ Tentang Masa Depan</button>
+            </div>
+
+            <div id="generatedLetterCard" class="generated-letter-card" style="display:none;">
+                <div id="downloadableLetterCard" class="downloadable-letter-inner">
+                    <p id="generatedLetterText"></p>
+                    <span class="generated-letter-signature">— Emeralda 🤍</span>
+                </div>
+                <div class="letter-gen-actions">
+                    <button class="quiz-btn" style="background:#6F8A5E; color:#F7F1E3; border-color:#6F8A5E;" onclick="regenerateLetter()">🔄 Buat Ulang</button>
+                    <button class="quiz-btn" style="background:#3A2E28; color:#F7F1E3; font-weight:bold;" onclick="downloadLetterCard()">📥 Download</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOX PIN REASONS -->
+        <div class="pin-box" id="pinBox">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+            <h4>🔒 Rahasia Terkunci!</h4>
+            <p>Apa makanan yang cewek kamu suka? (Format: huruf kecil semua)):</p>
+            <input type="password" id="pinInput" class="pin-input" maxlength="5" placeholder="•••••">
+            <br>
+            <button class="pin-btn" onclick="verifyPin()">Buka Rahasia 🔓</button>
+        </div>
+
+        <!-- BOX PIN GIS / DUYUNG -->
+        <div class="pin-box" id="pinBoxDuyung">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+            <h4>🔒 Siapakah Aku?</h4>
+            <p>Tebak kata sandi rahasianya (Format: huruf kecil semua)</p>
+            <input type="password" id="pinInputDuyung" class="pin-input" placeholder="------">
+            <br>
+            <button class="pin-btn" onclick="verifyPinDuyung()">Buka Peta 🌊</button>
+        </div>
+
+        <div class="quiz-container" id="quizBox">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+            <div class="quiz-question" id="quizQuestion">Pertanyaan akan muncul di sini...</div>
+            <div class="quiz-options" id="quizOptions"></div>
+        </div>
+
+        <div class="quiz-result" id="quizResult">
+            <h4 id="resultTitle">🎉 SELAMAT!</h4>
+            <p id="quizResultMessage">Pesan hasil akan muncul di sini...</p>
+            <div class="ss-notice">
+                📸 JANGAN LUPA SCREENSHOT HALAMAN INI TERUS KIRIM KE AKU YA SAYANG! 💖
+            </div>
+            <button class="quiz-btn" style="margin-top: 15px; text-align: center; width: 100%; background: #6F8A5E; color:#F7F1E3; border-color:#6F8A5E;" onclick="backToGameSelect()">Main Game Lainnya 🔄</button>
+        </div>
+
+        <div class="reasons-container" id="reasonsBox">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+
+            <!-- Area yang akan di-capture & didownload -->
+            <div id="downloadableReasonsCard" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.15);">
+                <h3 style="color:#A86B26; margin-bottom: 10px; text-align:center;">💖 10 Reasons Why I Love You</h3>
+                <div id="reasonsList"></div>
+            </div>
+
+            <!-- Tombol Download -->
+            <button class="quiz-btn" style="margin-top: 15px; text-align: center; width: 100%; background: #3A2E28; color:#F7F1E3; font-weight: bold;" onclick="downloadReasonsCard()">📥 Download Kartu Alasan Ini</button>
+
+            <div class="ss-notice" style="text-align: center;">
+                📸 BISA KLIK TOMBOL DOWNLOAD DI ATAS ATAU SCREENSHOT LANGSUNG! 💖
+            </div>
+        </div>
+
+        <!-- CONTAINER SERTIFIKAT PENGHARGAAN -->
+        <div class="quiz-container" id="certificateBox" style="text-align:center; padding: 15px;">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+
+            <div id="downloadableCertificate" style="background:#F7F1E3; padding: 26px 20px; border: 2px solid #3A2E28; outline: 1px solid #3A2E28; outline-offset: -8px; text-align: center; box-shadow: 0 6px 14px rgba(58,46,40,.18); position: relative;">
+                <div style="font-size: 28px; margin-bottom: 4px;">🏆</div>
+                <h4 style="color: #A8423F; font-size: 30px; margin-bottom: 0;">Sertifikat Penghargaan</h4>
+                <p style="font-size: 10px; color:#6B5A4E; margin-bottom: 16px; letter-spacing: 1px;">certificate of appreciation</p>
+
+                <p style="font-size: 11.5px; color:#6B5A4E; margin-bottom: 2px;">Diberikan dengan penuh rasa sayang kepada:</p>
+                <h2 style="font-size: 44px; color: #3A2E28; margin-bottom: 8px; transform: rotate(-2deg);">Sayangkuu</h2>
+
+                <p style="font-size: 12px; line-height: 1.6; color:#3A2E28; padding: 0 8px; margin-bottom: 16px;">
+                    Atas pencapaian luar biasa sebagai <b>Pacar Paling Hebat, Paling Sabar, dan Paling Favorit</b> di dunia yang selalu berhasil membuat hari-hari penuh dengan kebahagiaan. 🤍
+                </p>
+
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 18px; padding-top: 10px; border-top: 1px dashed rgba(58,46,40,.35); font-size: 10px; color:#6B5A4E;">
+                    <div style="text-align: left;">
+                        <span style="display: block;">Tanggal terbit:</span>
+                        <strong style="color: #3A2E28;">30 September 2026</strong>
+                    </div>
+                    <div style="width:54px; height:54px; border:2px solid #A8423F; border-radius:50%; color:#A8423F; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; transform:rotate(-14deg); line-height:1.1;">SAH<br>🤍</div>
+                    <div style="text-align: right;">
+                        <span style="display: block;">Dikeluarkan oleh:</span>
+                        <strong style="color: #A8423F; font-family:'Caveat',cursive; font-size:18px;">Emeralda</strong>
+                    </div>
+                </div>
+            </div>
+
+            <button class="quiz-btn" style="margin-top: 18px; text-align: center; width: 100%; background: #3A2E28; color:#F7F1E3; font-weight: bold;" onclick="downloadCertificate()">📥 Download Sertifikat Ini</button>
+        </div>
+
+        <!-- SLIDER GIS & GOMBALAN -->
+        <div id="duyungSlider" class="quiz-container" style="text-align:center; padding: 20px;">
+            <button class="back-to-menu-btn" onclick="backToGameSelect()">🡸 Kembali ke Pilihan Game</button>
+            <h3 style="color:#A86B26; margin-bottom: 15px;">🧜‍♀️ Pesan Rahasia </h3>
+
+            <div id="slide1" class="duyung-slide active">
+                <p style="font-size: 15px; line-height: 1.6;">Cinta kita tuh kayak <b>Topologi</b>, selalu terhubung dan nggak akan pernah overlap atau terpisah oleh batas administrasi apapun. 🗺️🤍</p>
+            </div>
+            <div id="slide2" class="duyung-slide" style="display:none;">
+                <p style="font-size: 15px; line-height: 1.6;">Kamu itu ibarat <b>GPS</b>, selalu ngasih koordinat X dan Y yang tepat buat hatiku supaya nggak pernah nyasar ke lain hati. 🛰️✨</p>
+            </div>
+            <div id="slide3" class="duyung-slide" style="display:none;">
+                <p style="font-size: 15px; line-height: 1.6;">Kalau hatiku itu sebuah titik (Point), maka kamu adalah <b>Buffer</b>-nya. Selalu melindungiku dan mencakup semua perhatianku. ⭕💖</p>
+            </div>
+            <div id="slide4" class="duyung-slide" style="display:none;">
+                <p style="font-size: 15px; line-height: 1.6;">Sebesar apapun <b>Skala</b> peta yang aku buat, tetep nggak akan pernah bisa mengukur seberapa luas rasaku ke kamu. 📏😘</p>
+            </div>
+            <div id="slide5" class="duyung-slide" style="display:none;">
+                <p style="font-size: 15px; line-height: 1.6;">Hubungan kita ini kayak <b>Overlay</b> dua layer yang sempurna. Saling melengkapi atribut satu sama lain jadi kesatuan yang indah! 🌍🥰</p>
+            </div>
+            <div id="slide6" class="duyung-slide" style="display:none;">
+                <h4 style="color:#4F6D8C; margin-bottom:10px;">🎥 Our Recap</h4>
+                <div class="recap-video-wrap">
+                    <video id="recapVideo" class="recap-video" controls playsinline preload="metadata">
+                        <source src="vidio/recap.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <p id="videoErrorNote" class="video-error-note">⚠️ Video belum bisa dimuat. Pastikan file berada di folder <b>vidio</b> dengan nama <b>recap.mp4</b>.</p>
+                <p style="font-family:'Caveat',cursive; font-size: 22px; color:#A8423F; margin-top:10px;">I love you, Sayang! 🌊🤍</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <button class="quiz-btn" style="width:45%; text-align:center;" onclick="prevSlide()">🡸 Prev</button>
+                <button class="quiz-btn" style="width:45%; text-align:center;" onclick="nextSlide()">Next 🡺</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN GALLERY VIEWER -->
+    <div id="viewer">
+        <span id="closeViewer">✕</span>
+        <div class="viewer-container">
+            <img id="viewerImg" src="" alt="Memory Photo">
+            <div class="viewer-card">
+                <div class="viewer-title" id="viewerTitle">Judul Momen</div>
+                <span class="viewer-date" id="viewerDate">Tanggal</span>
+                <p class="viewer-text" id="viewerCaption">Cerita kenangan di balik foto ini...</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!-- JS MODULAR: urutan load penting krn dependensi -->
+    <!-- ============================================ -->
+    <script src="js/data.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/ui-core.js"></script>
+    <script src="js/countdown.js"></script>
+    <script src="js/music-player.js"></script>
+    <script src="js/mood.js"></script>
+    <script src="js/games-spinwheel.js"></script>
+    <script src="js/games-arcade.js"></script>
+    <script src="js/games-shooter.js"></script>
+    <script src="js/games-memory.js"></script>
+    <script src="js/games-quiz.js"></script>
+    <script src="js/games-duyung.js"></script>
+    <script src="js/letter-generator.js"></script>
+    <script src="js/guestbook.js"></script>
+    <script src="js/misc.js"></script>
+</body>
+</html>
